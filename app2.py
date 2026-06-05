@@ -51,7 +51,7 @@ html, body, .stApp {
 /* ----- Top bar ----- */
 .topbar {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 1rem;
     border-bottom: 2px solid var(--orange);
     padding-bottom: 1rem;
