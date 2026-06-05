@@ -271,7 +271,7 @@ st.markdown(f"""
     <span class="topbar-sub">Image-specific prompts for architectural AI rendering</span>
     <div style="margin-left:auto;">
         <img src="data:image/png;base64,{logo_b64}"
-             style="height:38px; width:auto; display:block;" />
+             style="height:50px; width:auto; display:block;" />
     </div>
 </div>
 """, unsafe_allow_html=True)
