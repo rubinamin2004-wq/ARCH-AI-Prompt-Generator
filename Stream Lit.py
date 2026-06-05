@@ -21,8 +21,7 @@ st.write(
 # =========================================================
 # PASTE YOUR GEMINI API KEY HERE
 
-GEMINI_API_KEY = "AIzaSyAmjoOIA00AXCKfAg19M4lK29D-Pnw1kZw"
-
+GEMINI_API_KEY = "AQ.Ab8RN6LLmHwiC-kJdF_97fCY9ZxZ5VVa6mYzoVf4aJIiqqpwsw"
 # =========================================================
 # IMAGE UPLOAD
 # =========================================================
