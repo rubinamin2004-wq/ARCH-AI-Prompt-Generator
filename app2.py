@@ -273,7 +273,7 @@ st.markdown(f"""
     </div>
     <div style="margin-left:auto;">
         <img src="data:image/png;base64,{logo_b64}"
-             style="height:32px; width:auto; display:block;" />
+             style="height:65px; width:auto; display:block;" />
     </div>
 </div>
 """, unsafe_allow_html=True)
