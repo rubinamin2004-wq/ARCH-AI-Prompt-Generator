@@ -114,7 +114,7 @@ html, body, .stApp {
 .stFileUploader label {
     font-size: 11px !important;
     font-weight: 500 !important;
-    color: var(--text-soft) !important;
+    color: var(--text-muted) !important;
     letter-spacing: 0.04em !important;
     text-transform: uppercase !important;
     margin-bottom: 4px !important;
