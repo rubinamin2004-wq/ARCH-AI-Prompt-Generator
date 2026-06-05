@@ -267,11 +267,13 @@ logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
 
 st.markdown(f"""
 <div class="topbar">
-    <span class="topbar-title">Architectural Prompt Generator</span>
-    <span class="topbar-sub">Image-specific prompts for architectural AI rendering</span>
+    <div style="display:flex; flex-direction:column; gap:2px;">
+        <span class="topbar-title">Architectural Prompt Generator</span>
+        <span class="topbar-sub">Image-specific prompts for architectural AI rendering</span>
+    </div>
     <div style="margin-left:auto;">
         <img src="data:image/png;base64,{logo_b64}"
-             style="height:70px; width:auto; display:block;" />
+             style="height:32px; width:auto; display:block;" />
     </div>
 </div>
 """, unsafe_allow_html=True)
