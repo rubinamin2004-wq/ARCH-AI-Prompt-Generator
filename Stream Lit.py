@@ -8,51 +8,317 @@ import google.generativeai as genai
 
 st.set_page_config(
     page_title="Architectural Prompt Generator",
-    layout="wide"
-)
-
-st.title("Architectural AI Prompt Generator")
-st.write(
-    "Generate strict image-specific prompts for architectural AI rendering."
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # =========================================================
-# API KEY
-# =========================================================
-# PASTE YOUR GEMINI API KEY HERE
-
-GEMINI_API_KEY = "AQ.Ab8RN6LLmHwiC-kJdF_97fCY9ZxZ5VVa6mYzoVf4aJIiqqpwsw"
-# =========================================================
-# IMAGE UPLOAD
+# CSS — MINIMAL ORANGE / WHITE THEME
 # =========================================================
 
-uploaded_file = st.file_uploader(
-    "Upload Interior / Exterior Image",
-    type=["jpg", "jpeg", "png"]
-)
+st.markdown("""
+<style>
 
-if uploaded_file:
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-    image = Image.open(uploaded_file)
+:root {
+    --orange:       #E85D04;
+    --orange-light: #FFF0E8;
+    --orange-mid:   #FFDCCA;
+    --white:        #FFFFFF;
+    --off-white:    #FAFAF9;
+    --border:       #E8E3DE;
+    --text:         #1A1A1A;
+    --text-soft:    #6B6560;
+    --text-muted:   #A8A09A;
+    --radius:       6px;
+}
 
-    col1, col2 = st.columns([1, 1])
+html, body, .stApp {
+    background-color: var(--white) !important;
+    color: var(--text) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+}
 
-    with col1:
+#MainMenu, footer, header, .stDeployButton { display: none !important; }
 
-        st.image(
-            image,
-            caption="Uploaded Image",
-            use_container_width=True
-        )
+.block-container {
+    max-width: 1320px !important;
+    padding: 2rem 2.5rem 4rem !important;
+}
 
-    # =====================================================
-    # MAIN OBJECTIVE
-    # =====================================================
+/* ----- Top bar ----- */
+.topbar {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 1rem;
+    margin-bottom: 2.5rem;
+}
+.topbar-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+}
+.topbar-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
 
-    st.subheader("1. Render Objective")
+/* ----- Section labels ----- */
+.sec {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    display: block;
+    margin-bottom: 0.75rem;
+}
 
+/* ----- Rule line ----- */
+.rule {
+    height: 1px;
+    background: var(--border);
+    margin: 1.6rem 0;
+}
+
+/* ----- API key box ----- */
+
+.api-status-ok {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.5rem;
+    font-size: 11px;
+    color: #2D7A3A;
+}
+.api-status-empty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 0.5rem;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ----- Inputs ----- */
+.stSelectbox label,
+.stTextArea label,
+.stTextInput label,
+.stCheckbox label,
+.stFileUploader label {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: var(--text-soft) !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 4px !important;
+}
+
+.stSelectbox > div > div {
+    background: var(--off-white) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    color: var(--text) !important;
+    font-size: 13px !important;
+}
+.stSelectbox > div > div:focus-within {
+    border-color: var(--orange) !important;
+    box-shadow: 0 0 0 3px rgba(232,93,4,0.1) !important;
+}
+
+.stTextArea textarea {
+    background: var(--off-white) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    color: var(--text) !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+}
+.stTextArea textarea:focus {
+    border-color: var(--orange) !important;
+    box-shadow: 0 0 0 3px rgba(232,93,4,0.1) !important;
+    outline: none !important;
+}
+
+.stTextInput input {
+    background: var(--off-white) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    color: var(--text) !important;
+    font-size: 13px !important;
+}
+.stTextInput input:focus {
+    border-color: var(--orange) !important;
+    box-shadow: 0 0 0 3px rgba(232,93,4,0.1) !important;
+    outline: none !important;
+}
+
+.stCheckbox span {
+    font-size: 13px !important;
+    color: var(--text) !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+.stCheckbox > div > label {
+    text-transform: none !important;
+    font-size: 13px !important;
+    letter-spacing: normal !important;
+}
+
+.stFileUploader > div {
+    background: var(--orange-light) !important;
+    border: 1px dashed var(--orange-mid) !important;
+    border-radius: var(--radius) !important;
+}
+.stFileUploader > div:hover {
+    border-color: var(--orange) !important;
+}
+.stFileUploader p, .stFileUploader span {
+    color: var(--text-soft) !important;
+    font-size: 14px !important;
+}
+
+/* ----- Buttons ----- */
+.stButton > button {
+    width: 100% !important;
+    background: var(--orange) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--radius) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    padding: 0.75rem 1.25rem !important;
+    transition: background 0.15s !important;
+    margin-top: 0.5rem !important;
+}
+.stButton > button:hover {
+    background: #C94E00 !important;
+}
+.stButton > button:disabled {
+    background: var(--border) !important;
+    color: var(--text-muted) !important;
+}
+
+.stDownloadButton > button {
+    width: 100% !important;
+    background: transparent !important;
+    color: var(--orange) !important;
+    border: 1px solid var(--orange) !important;
+    border-radius: var(--radius) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    padding: 0.7rem 1.25rem !important;
+    transition: background 0.15s !important;
+    margin-top: 0.4rem !important;
+}
+.stDownloadButton > button:hover {
+    background: var(--orange-light) !important;
+}
+
+/* ----- Image ----- */
+.stImage img {
+    border-radius: var(--radius) !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* ----- Output textarea ----- */
+.stTextArea textarea[readonly] {
+    background: var(--off-white) !important;
+    color: var(--text-soft) !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
+    line-height: 1.65 !important;
+    border-color: var(--border) !important;
+}
+
+/* ----- Scrollbar ----- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+[data-testid="column"] { padding: 0 0.6rem !important; }
+[data-testid="column"]:first-child { padding-left: 0 !important; }
+[data-testid="column"]:last-child  { padding-right: 0 !important; }
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================================================
+# TOPBAR
+# =========================================================
+
+st.markdown("""
+<div class="topbar">
+    <span class="topbar-title">Architectural Prompt Generator</span>
+    <span class="topbar-sub">Image-specific prompts for architectural AI rendering</span>
+</div>
+""", unsafe_allow_html=True)
+
+# =========================================================
+# LAYOUT
+# =========================================================
+
+col_left, col_right = st.columns([1, 1], gap="large")
+
+# =========================================================
+# LEFT — CONTROLS
+# =========================================================
+
+with col_left:
+
+    # ----- 00 — API Key (inline) -----
+    st.markdown('<span class="sec">00 — API Configuration</span>', unsafe_allow_html=True)
+    st.markdown('<div class="api-box">', unsafe_allow_html=True)
+    GEMINI_API_KEY = st.text_input(
+        "Gemini API Key",
+        type="password",
+        placeholder="AIza...",
+        help="Get your key at https://aistudio.google.com/app/apikey",
+        label_visibility="collapsed"
+    )
+    if GEMINI_API_KEY:
+        st.markdown("""
+        <div class="api-status-ok">
+            <span>●</span> <span>Key entered — ready to generate</span>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class="api-status-empty">
+            <span>○</span> <span>Enter your Gemini API key above &nbsp;·&nbsp; <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#E85D04; text-decoration:none;">Get one free ↗</a></span>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
+
+    # ----- 01 — Reference Image -----
+    st.markdown('<span class="sec">01 — Reference Image</span>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader(
+        "Upload image",
+        type=["jpg", "jpeg", "png"],
+        label_visibility="collapsed"
+    )
+    if uploaded_file:
+        image = Image.open(uploaded_file)
+        st.image(image, use_container_width=True)
+
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
+
+    st.markdown('<span class="sec">02 — Render Objective</span>', unsafe_allow_html=True)
     render_goal = st.selectbox(
-        "Select Objective",
+        "Objective",
         [
             "Ultra Realistic Enhancement",
             "Generate Different Perspective",
@@ -63,204 +329,165 @@ if uploaded_file:
             "Scandinavian Styling",
             "Industrial Styling",
             "Lighting Enhancement"
-        ]
+        ],
+        label_visibility="collapsed"
     )
 
-    # =====================================================
-    # CAMERA SETTINGS
-    # =====================================================
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.subheader("2. Camera Settings")
+    st.markdown('<span class="sec">03 — Camera Settings</span>', unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        camera_type = st.selectbox("Camera Body", ["Sony A7R IV", "Canon EOS R5", "RED Komodo", "Nikon Z8"])
+    with c2:
+        lens_type = st.selectbox("Lens", ["16mm Ultra Wide", "24mm Architectural", "35mm Natural Perspective", "50mm Cinematic"])
 
-    camera_type = st.selectbox(
-        "Camera",
-        [
-            "Sony A7R IV",
-            "Canon EOS R5",
-            "RED Komodo",
-            "Nikon Z8"
-        ]
-    )
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    lens_type = st.selectbox(
-        "Lens",
-        [
-            "16mm Ultra Wide",
-            "24mm Architectural",
-            "35mm Natural Perspective",
-            "50mm Cinematic"
-        ]
-    )
-
-    # =====================================================
-    # PERSPECTIVE CONTROL
-    # =====================================================
-
-    st.subheader("3. Perspective View Synthesis")
-
-    enable_perspective = st.checkbox(
-        "Enable Different Perspective Generation"
-    )
-
+    st.markdown('<span class="sec">04 — Perspective</span>', unsafe_allow_html=True)
+    enable_perspective = st.checkbox("Enable Different Perspective Generation")
     perspective_instruction = ""
-
+    custom_perspective = ""
     if enable_perspective:
-
         perspective_instruction = st.selectbox(
-            "Select New Camera View",
+            "New Camera View",
             [
-                "View From Left Corner",
-                "View From Right Corner",
-                "Wide Angle Entire Room",
-                "Closer Human Eye Perspective",
-                "View Facing Main Wall",
-                "View Towards Seating Area",
-                "View Towards Window",
-                "Top Corner Perspective",
-                "Low Angle Cinematic View",
-                "Eye-Level Architectural Shot"
+                "View From Left Corner", "View From Right Corner",
+                "Wide Angle Entire Room", "Closer Human Eye Perspective",
+                "View Facing Main Wall", "View Towards Seating Area",
+                "View Towards Window", "Top Corner Perspective",
+                "Low Angle Cinematic View", "Eye-Level Architectural Shot"
             ]
         )
+        custom_perspective = st.text_input("Additional Perspective Instructions", placeholder="Example: Camera moved 2 meters backward")
 
-        custom_perspective = st.text_input(
-            "Additional Perspective Instructions",
-            placeholder="Example: Camera moved 2 meters backward"
-        )
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    else:
-
-        custom_perspective = ""
-
-    # =====================================================
-    # LIGHTING
-    # =====================================================
-
-    st.subheader("4. Lighting")
-
+    st.markdown('<span class="sec">05 — Lighting</span>', unsafe_allow_html=True)
     lighting_style = st.selectbox(
         "Lighting Style",
-        [
-            "Natural Daylight",
-            "Warm Ambient",
-            "Golden Hour",
-            "Soft Luxury",
-            "Cinematic",
-            "Studio Lighting",
-            "Evening Mood"
-        ]
+        ["Natural Daylight", "Warm Ambient", "Golden Hour", "Soft Luxury", "Cinematic", "Studio Lighting", "Evening Mood"],
+        label_visibility="collapsed"
     )
 
-    # =====================================================
-    # TEXTURE / MATERIAL CONTROL
-    # =====================================================
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.subheader("5. Texture / Material Modification")
-
-    enable_texture_change = st.checkbox(
-        "Enable Texture / Material Changes"
-    )
-
+    st.markdown('<span class="sec">06 — Texture / Material</span>', unsafe_allow_html=True)
+    enable_texture_change = st.checkbox("Enable Texture / Material Changes")
     texture_instruction = ""
-
     if enable_texture_change:
-
         texture_instruction = st.text_area(
             "Texture Instructions",
-            placeholder="""
-Examples:
-
-- Replace flooring with Italian marble
-- Replace wall texture with oak veneer
-- Change sofa fabric to grey suede
-- Replace countertop with black granite
-- Keep ceiling unchanged
-"""
+            placeholder=(
+                "Examples:\n"
+                "- Replace flooring with Italian marble\n"
+                "- Replace wall texture with oak veneer\n"
+                "- Change sofa fabric to grey suede\n"
+                "- Keep ceiling unchanged"
+            ),
+            height=130
         )
 
-    # =====================================================
-    # STRICT PRESERVATION
-    # =====================================================
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.subheader("6. Strict Preservation Rules")
+    st.markdown('<span class="sec">07 — Preservation Rules</span>', unsafe_allow_html=True)
+    p1, p2 = st.columns(2)
+    with p1:
+        preserve_geometry  = st.checkbox("Preserve Exact Geometry",    value=True)
+        preserve_layout    = st.checkbox("Preserve Furniture Layout",   value=True)
+        preserve_materials = st.checkbox("Preserve Existing Materials", value=True)
+    with p2:
+        preserve_lighting       = st.checkbox("Preserve Existing Lighting", value=True)
+        preserve_scene_identity = st.checkbox("Preserve Scene Identity",    value=True)
 
-    preserve_geometry = st.checkbox(
-        "Preserve Exact Geometry",
-        value=True
-    )
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    preserve_layout = st.checkbox(
-        "Preserve Furniture Layout",
-        value=True
-    )
-
-    preserve_materials = st.checkbox(
-        "Preserve Existing Materials",
-        value=True
-    )
-
-    preserve_lighting = st.checkbox(
-        "Preserve Existing Lighting",
-        value=True
-    )
-
-    preserve_scene_identity = st.checkbox(
-        "Preserve Scene Identity",
-        value=True
-    )
-
-    # =====================================================
-    # REALISM SETTINGS
-    # =====================================================
-
-    st.subheader("7. Realism Settings")
-
+    st.markdown('<span class="sec">08 — Realism Quality</span>', unsafe_allow_html=True)
     realism_quality = st.selectbox(
-        "Realism Quality",
-        [
-            "Ultra Photorealistic",
-            "Architectural Magazine Quality",
-            "Luxury Interior Photography",
-            "Competition Render Quality",
-            "DSLR Realism"
-        ]
+        "Quality",
+        ["Ultra Photorealistic", "Architectural Magazine Quality", "Luxury Interior Photography", "Competition Render Quality", "DSLR Realism"],
+        label_visibility="collapsed"
     )
 
-    # =====================================================
-    # NEGATIVE PROMPT
-    # =====================================================
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.subheader("8. Hallucination Prevention")
-
+    st.markdown('<span class="sec">09 — Hallucination Prevention</span>', unsafe_allow_html=True)
     custom_negative = st.text_area(
         "Additional Restrictions",
-        placeholder="""
-Examples:
-
-- Do not add extra furniture
-- Do not redesign ceiling
-- Do not add windows
-- Do not modify architecture
-"""
+        placeholder=(
+            "Examples:\n"
+            "- Do not add extra furniture\n"
+            "- Do not redesign ceiling\n"
+            "- Do not add windows"
+        ),
+        height=110
     )
 
-    # =====================================================
-    # GENERATE PROMPT
-    # =====================================================
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    if st.button("Generate Prompt"):
+    # Determine button state and label
+    if not uploaded_file and not GEMINI_API_KEY:
+        btn_label = "Upload Image & Enter API Key"
+        btn_disabled = True
+    elif not uploaded_file:
+        btn_label = "Upload an Image to Continue"
+        btn_disabled = True
+    elif not GEMINI_API_KEY:
+        btn_label = "Enter API Key Above to Continue"
+        btn_disabled = True
+    else:
+        btn_label = "Generate Prompt"
+        btn_disabled = False
 
-        # ================================================
-        # API ONLY CALLED HERE
-        # ================================================
+    generate_btn = st.button(btn_label, disabled=btn_disabled)
+
+# =========================================================
+# RIGHT — OUTPUT
+# =========================================================
+
+with col_right:
+
+    st.markdown('<span class="sec">Prompt Output</span>', unsafe_allow_html=True)
+
+    if not uploaded_file:
+        st.markdown("""
+        <div style="
+            border: 1px dashed #E8E3DE;
+            border-radius: 6px;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: #A8A09A;
+            font-size: 13px;
+            line-height: 2;
+            background: #FAFAF9;
+        ">
+            Upload a reference image<br>and configure the left panel.
+        </div>
+        """, unsafe_allow_html=True)
+
+    elif not GEMINI_API_KEY:
+        st.markdown("""
+        <div style="
+            border: 1px dashed #FFDCCA;
+            border-radius: 6px;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: #A8A09A;
+            font-size: 13px;
+            line-height: 2;
+            background: #FFF0E8;
+        ">
+            Image uploaded.<br>
+            Enter your <strong style="color:#E85D04;">Gemini API key</strong> in section 00 on the left.
+        </div>
+        """, unsafe_allow_html=True)
+
+    elif generate_btn:
 
         genai.configure(api_key=GEMINI_API_KEY)
+        vision_model = genai.GenerativeModel("gemini-2.5-flash")
 
-        vision_model = genai.GenerativeModel(
-            "gemini-2.5-flash"
-        )
-
-        with st.spinner("Analyzing Image..."):
-
+        with st.spinner("Analyzing image..."):
             analysis_prompt = """
             Analyze this architectural/interior image carefully.
 
@@ -284,24 +511,11 @@ Examples:
 
             Keep response concise and structured.
             """
-
-            response = vision_model.generate_content(
-                [
-                    analysis_prompt,
-                    image
-                ]
-            )
-
+            response = vision_model.generate_content([analysis_prompt, image])
             scene_analysis = response.text
 
-        # =================================================
-        # PERSPECTIVE BLOCK
-        # =================================================
-
         perspective_block = ""
-
         if enable_perspective:
-
             perspective_block = f"""
 
 ---------------------------------------------------
@@ -353,14 +567,8 @@ CAMERA BEHAVIOR:
 - Natural field of view
 """
 
-        # =================================================
-        # TEXTURE BLOCK
-        # =================================================
-
         texture_block = ""
-
         if enable_texture_change:
-
             texture_block = f"""
 
 ---------------------------------------------------
@@ -377,10 +585,6 @@ STRICT MATERIAL RULES:
 - Maintain physically accurate materials
 - Preserve original architecture
 """
-
-        # =================================================
-        # NEGATIVE PROMPT
-        # =================================================
 
         negative_prompt = f"""
 
@@ -403,10 +607,6 @@ Maintain exact scene identity.
 
 {custom_negative}
 """
-
-        # =================================================
-        # FINAL PROMPT
-        # =================================================
 
         final_prompt = f"""
 STRICT IMAGE-TO-IMAGE ARCHITECTURAL RENDERING PROMPT
@@ -496,18 +696,101 @@ CRITICAL INSTRUCTIONS
 - Only apply explicitly requested modifications
 """
 
-        with col2:
+        st.text_area("Output", final_prompt, height=820, label_visibility="collapsed")
 
-            st.subheader("Generated Prompt")
+        # Copy button + Gemini link row
+        import json
+        escaped_prompt = json.dumps(final_prompt)
+        st.markdown(f"""
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.6rem; margin-bottom:0.2rem;">
+            <button onclick="
+                navigator.clipboard.writeText({escaped_prompt}).then(() => {{
+                    this.textContent = '✓ Copied';
+                    this.style.background = '#2D7A3A';
+                    setTimeout(() => {{
+                        this.textContent = 'Copy Prompt';
+                        this.style.background = '#E85D04';
+                    }}, 2000);
+                }});
+            " style="
+                background: #E85D04;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                padding: 0.6rem 1.1rem;
+                cursor: pointer;
+                transition: background 0.15s;
+                font-family: 'Inter', sans-serif;
+            ">Copy Prompt</button>
+            <a href="https://gemini.google.com" target="_blank" style="
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: #E85D04;
+                text-decoration: none;
+                border: 1px solid #FFDCCA;
+                border-radius: 6px;
+                padding: 0.55rem 1rem;
+                background: #FFF0E8;
+                transition: background 0.15s;
+            ">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="#E85D04"/>
+                </svg>
+                Open Google Gemini ↗
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
 
-            st.text_area(
-                "Prompt",
-                final_prompt,
-                height=850
-            )
+        st.download_button(
+            "Download Prompt as .txt",
+            final_prompt,
+            file_name="architectural_prompt.txt"
+        )
 
-            st.download_button(
-                "Download Prompt",
-                final_prompt,
-                file_name="architectural_prompt.txt"
-            )
+        st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
+
+        m1, m2, m3 = st.columns(3)
+        word_count  = len(final_prompt.split())
+        char_count  = len(final_prompt)
+        block_count = 2 + (1 if enable_perspective else 0) + (1 if enable_texture_change else 0)
+
+        for col, label, val in zip(
+            [m1, m2, m3],
+            ["Words", "Characters", "Active Blocks"],
+            [word_count, char_count, block_count]
+        ):
+            with col:
+                st.markdown(f"""
+                <div style="text-align:center; padding:1rem 0.5rem;
+                            border:1px solid #E8E3DE; border-radius:6px; background:#FAFAF9;">
+                    <div style="font-size:1.5rem; font-weight:600; color:#E85D04; line-height:1;">{val}</div>
+                    <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+                                color:#A8A09A; margin-top:4px;">{label}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+    else:
+        st.markdown("""
+        <div style="
+            border: 1px dashed #E8E3DE;
+            border-radius: 6px;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            color: #A8A09A;
+            font-size: 13px;
+            line-height: 2;
+            background: #FAFAF9;
+        ">
+            Parameters configured.<br>
+            Press <strong style="color:#E85D04;">Generate Prompt</strong> to continue.
+        </div>
+        """, unsafe_allow_html=True)
