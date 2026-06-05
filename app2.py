@@ -30,7 +30,7 @@ st.markdown("""
     --border:       #E8E3DE;
     --text:         #1A1A1A;
     --text-soft:    #6B6560;
-    --text-muted:   #A8A09A;
+    --text-muted:   #1A1A1A;
     --radius:       6px;
 }
 
