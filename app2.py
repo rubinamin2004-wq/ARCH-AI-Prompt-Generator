@@ -273,7 +273,7 @@ logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
 st.markdown(f"""
 <div class="topbar">
     <div style="display:flex; flex-direction:column; gap:2px;">
-        <span class="topbar-title">Architectural Prompt Generator</span>
+        <span class="topbar-title">Architectural Prompt Generator Engine</span>
         <span class="topbar-sub">Image-specific prompts for architectural AI rendering</span>
     </div>
     <div style="margin-left:auto;">
