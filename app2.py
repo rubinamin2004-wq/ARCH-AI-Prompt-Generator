@@ -161,8 +161,8 @@ html, body, .stApp {
 
 .stCheckbox span {
     font-size: 13px !important;
-    color: var(--text) !important;
-    font-weight: 400 !important;
+    color: #1A1A1A !important;
+    font-weight: 500 !important;
     text-transform: none !important;
     letter-spacing: normal !important;
 }
@@ -170,6 +170,11 @@ html, body, .stApp {
     text-transform: none !important;
     font-size: 13px !important;
     letter-spacing: normal !important;
+    color: #1A1A1A !important;
+}
+.stCheckbox p {
+    color: #1A1A1A !important;
+    font-size: 13px !important;
 }
 
 .stFileUploader > div {
