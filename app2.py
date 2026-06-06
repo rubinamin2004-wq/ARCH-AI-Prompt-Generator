@@ -29,7 +29,7 @@ st.markdown("""
     --off-white:    #FAFAF9;
     --border:       #E8E3DE;
     --text:         #1A1A1A;
-    --text-soft:    #6B6560;
+    --text-soft:    #1A1A1A;
     --text-muted:   #1A1A1A;
     --radius:       6px;
 }
