@@ -296,7 +296,7 @@ col_left, col_right = st.columns([1, 1], gap="large")
 with col_left:
 
     # ----- 00 — API Key (inline) -----
-    st.markdown('<span class="sec">00 — API Configuration</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">API Configuration</span>', unsafe_allow_html=True)
     st.markdown('<div class="api-box">', unsafe_allow_html=True)
     GEMINI_API_KEY = st.text_input(
         "Gemini API Key",
@@ -321,7 +321,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">00B — Gemini Model</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Gemini Model</span>', unsafe_allow_html=True)
     gemini_model = st.selectbox(
         "Gemini Model",
         [   "gemini-3.1-flash-lite",
@@ -339,7 +339,7 @@ with col_left:
     # ----- 01 — Reference Image -----
 
     # ----- 01 — Reference Image -----
-    st.markdown('<span class="sec">01 — Reference Image</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Reference Image</span>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
         "Upload image",
         type=["jpg", "jpeg", "png"],
@@ -351,7 +351,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">02 — Render Objective</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Render Objective</span>', unsafe_allow_html=True)
     render_goal = st.selectbox(
         "Objective",
         [
@@ -370,7 +370,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">03 — Camera Settings</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Camera Settings</span>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
         camera_type = st.selectbox("Camera Body", ["Sony A7R IV", "Canon EOS R5", "RED Komodo", "Nikon Z8"])
@@ -379,7 +379,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">04 — Perspective</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Perspective</span>', unsafe_allow_html=True)
     enable_perspective = st.checkbox("Enable Different Perspective Generation")
     perspective_instruction = ""
     custom_perspective = ""
@@ -398,7 +398,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">05 — Lighting</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Lighting</span>', unsafe_allow_html=True)
     lighting_style = st.selectbox(
         "Lighting Style",
         ["Natural Daylight", "Warm Ambient", "Golden Hour", "Soft Luxury", "Cinematic", "Studio Lighting", "Evening Mood"],
@@ -437,7 +437,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">08 — Realism Quality</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Realism Quality</span>', unsafe_allow_html=True)
     realism_quality = st.selectbox(
         "Quality",
         ["Ultra Photorealistic", "Architectural Magazine Quality", "Luxury Interior Photography", "Competition Render Quality", "DSLR Realism"],
@@ -446,7 +446,7 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
-    st.markdown('<span class="sec">09 — Hallucination Prevention</span>', unsafe_allow_html=True)
+    st.markdown('<span class="sec">Hallucination Prevention</span>', unsafe_allow_html=True)
     custom_negative = st.text_area(
         "Additional Restrictions",
         placeholder=(
