@@ -321,6 +321,23 @@ with col_left:
 
     st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
 
+    st.markdown('<span class="sec">00B — Gemini Model</span>', unsafe_allow_html=True)
+    gemini_model = st.selectbox(
+        "Gemini Model",
+        [
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.0-flash",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+        ],
+        label_visibility="collapsed"
+    )
+
+    st.markdown('<div class="rule"></div>', unsafe_allow_html=True)
+
+    # ----- 01 — Reference Image -----
+
     # ----- 01 — Reference Image -----
     st.markdown('<span class="sec">01 — Reference Image</span>', unsafe_allow_html=True)
     uploaded_file = st.file_uploader(
@@ -503,7 +520,7 @@ with col_right:
     elif generate_btn:
 
         genai.configure(api_key=GEMINI_API_KEY)
-        vision_model = genai.GenerativeModel("gemini-2.5-flash")
+        vision_model = genai.GenerativeModel(gemini_model)
 
         with st.spinner("Analyzing image..."):
             analysis_prompt = """
